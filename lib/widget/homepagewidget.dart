@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instaapp/helpermethods/firestoremethos.dart';
+
 import 'package:instaapp/view/commentspage.dart';
 
 class Homepagewidget extends StatefulWidget {
@@ -40,6 +41,15 @@ class _HomepagewidgetState extends State<Homepagewidget> {
       setState(() {
         isLiked = !isLiked;
       });
+    }
+  }
+
+  void deletePost() async {
+    try {
+      await FirestoreMethods().deletepost(post: widget.data);
+      print('Post deletion requested');
+    } catch (e) {
+      print('Error deleting post: $e');
     }
   }
 
@@ -88,12 +98,13 @@ class _HomepagewidgetState extends State<Homepagewidget> {
                 color: isLiked ? Colors.red : Colors.grey,
               ),
             ),
-            IconButton(onPressed: () {
-              FirestoreMethods().deletepost(post: widget.data);
-            }, icon: const Icon(Icons.remove)),
+            IconButton(
+              onPressed: deletePost,
+              icon: const Icon(Icons.remove),
+            ),
           ],
         ),
-         Text('${widget.data['likes'].length} likes'),
+        Text('${widget.data['likes'].length} likes'),
         const SizedBox(height: 5),
         Text(description),
         const SizedBox(height: 10),

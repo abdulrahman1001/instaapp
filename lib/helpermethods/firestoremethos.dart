@@ -30,8 +30,7 @@ class FirestoreMethods {
     try {
       usermodel user = await getUser();
       FirebaseFirestore.instance.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayUnion(
-            [user.id]) // Assuming 'uid' is the unique identifier
+        'likes': FieldValue.arrayUnion([user.id]) // Assuming 'uid' is the unique identifier
       });
     } catch (e) {
       print("Error in addlike: $e");
@@ -43,8 +42,7 @@ class FirestoreMethods {
     try {
       usermodel user = await getUser();
       FirebaseFirestore.instance.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayRemove(
-            [user.id]) // Assuming 'uid' is the unique identifier
+        'likes': FieldValue.arrayRemove([user.id]) // Assuming 'uid' is the unique identifier
       });
     } catch (e) {
       print("Error in removelike: $e");
@@ -52,16 +50,21 @@ class FirestoreMethods {
     }
   }
 
-  deletepost({required Map post}) async {
-    usermodel user = await getUser();
-    if (user.id == post['postid']) {
-      {
+  Future<void> deletepost({required Map<String, dynamic> post}) async {
+    try {
+      usermodel user = await getUser();
+      if (user.id == post['uid']) { // Assuming 'uid' is the post owner's ID
         await FirebaseFirestore.instance
             .collection('posts')
             .doc(post['postid'])
             .delete();
         print('Post deleted successfully');
+      } else {
+        print('You do not have permission to delete this post');
       }
+    } catch (e) {
+      print("Error in deletepost: $e");
+      throw Exception("Error deleting post: $e");
     }
   }
 }

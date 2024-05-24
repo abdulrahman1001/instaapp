@@ -65,7 +65,7 @@ class _AddPostPageState extends State<AddPostPage> {
           await postRef.set({
             'postid': postRef.id,  // Add the postid field
             'username': user.name,
-            'uid': userId,
+            'uid': user.id,
             'userimage': user.img ?? '',
             'description': controller.text,
             'postimage': imageUrl,
