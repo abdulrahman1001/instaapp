@@ -67,4 +67,30 @@ class FirestoreMethods {
       throw Exception("Error deleting post: $e");
     }
   }
+  
+      
+  Future<void> uploadComments({required Map<String, dynamic> post, required String description}) async {
+  try {
+    usermodel user = await getUser();
+    DocumentReference postRef = FirebaseFirestore.instance.collection('comments').doc();
+    
+    // Store comment data in Firestore
+    await postRef.set({
+      'commentId': postRef.id,  // Add the commentId field
+      'postid': post['postid'], // Ensure this refers to the post's ID
+      'username': user.name,
+      'uid': user.id,
+      'userimage': user.img ?? '',
+      'description': description,
+      'likes': [],
+      'date': DateTime.now() // Optional: Add a timestamp field
+    });
+
+    print('Comment uploaded successfully');
+  } catch (e) {
+    print("Error in uploadComments: $e");
+    throw Exception("Error uploading comment: $e");
+  }
+}
+
 }

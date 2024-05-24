@@ -111,7 +111,7 @@ class _HomepagewidgetState extends State<Homepagewidget> {
         TextButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const CommentsPage();
+              return  CommentsPage(data: widget.data,);
             }));
           },
           child: const Text('add comment'),
