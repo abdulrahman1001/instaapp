@@ -12,14 +12,14 @@ class profilepage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-             rowprofilepage(),
+             RowProfilePage(),
           Container(
             width: MediaQuery.of(context).size.width,
             color: Colors.grey,
             alignment: Alignment.bottomCenter,
             child: Text('edit profile'),
           ),
-         postgridview(),
+        PostGridView (),
       
         ],
       ),
