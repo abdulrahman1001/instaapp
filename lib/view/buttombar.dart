@@ -20,7 +20,7 @@ class _BottomBarpageState extends State<BottomBarpage> {
   // A list of widgets to display based on the selected index
   final List<Widget> _widgetOptions = <Widget>[
     Homepage(),
-    searchpage(),
+    SearchPage(),
     AddPostPage(),
     profilepage(),
   ];

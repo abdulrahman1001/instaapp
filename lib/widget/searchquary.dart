@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:instaapp/constatnt.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class searcquery extends StatelessWidget {
-  const searcquery({super.key});
+class SearchQuery extends StatelessWidget {
+  const SearchQuery({super.key, required this.mydata});
+  final QueryDocumentSnapshot mydata;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('name'),
-      trailing:Container(
-  width: 130,
-  height: 130,
-  decoration: BoxDecoration(
-    shape: BoxShape.circle,
-    image: DecorationImage(
-      image:  NetworkImage(myimg),
-      fit: BoxFit.fill
-    ),
-  ),
-),
-    ) ;
+      title: Text(mydata['name']),
+      trailing: Container(
+        width: 50,  // Adjusted size to fit better
+        height: 50,  // Adjusted size to fit better
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: NetworkImage( myimg),  // Ensure mydata contains profile_image or fallback to myimg
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
   }
 }

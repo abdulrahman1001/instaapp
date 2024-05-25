@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:instaapp/widget/searchpagelistview.dart';
 
-class searchpage extends StatelessWidget {
-  const searchpage({super.key});
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController searchController = TextEditingController();
+  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +19,20 @@ class searchpage extends StatelessWidget {
       child: Column(
         children: [
           TextField(
+            onChanged: (value) {
+              setState(() {
+                searchText = value;
+              });
+            },
+            controller: searchController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Search',
             ),
           ),
-          searchpagelistview()
+          Expanded(
+            child: SearchPageListView(text: searchText),
+          ),
         ],
       ),
     );
