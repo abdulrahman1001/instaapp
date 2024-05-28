@@ -96,56 +96,185 @@ class FirestoreMethods {
       throw Exception("Error uploading comment: $e");
     }
   }
-Future<void> addFollow(String userIdToFollow) async {
-  try {
-    // Get the current logged-in user
-    usermodel user = await getUser();
+// Future<void> addFollow(String userIdToFollow) async {
+//   try {
+//     // Get the current logged-in user
+//     usermodel user = await getUser();
 
-    // Find the document reference of the user to follow based on their userId
-    QuerySnapshot querySnapshotToFollow = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: userIdToFollow)
-        .limit(1)
-        .get();
+//     // Find the document reference of the user to follow based on their userId
+//     QuerySnapshot querySnapshotToFollow = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where('id', isEqualTo: userIdToFollow)
+//         .limit(1)
+//         .get();
 
-    if (querySnapshotToFollow.docs.isEmpty) {
-      throw Exception('User to follow not found');
+//     if (querySnapshotToFollow.docs.isEmpty) {
+//       throw Exception('User to follow not found');
+//     }
+
+//     DocumentReference userToFollowRef = querySnapshotToFollow.docs.first.reference;
+
+//     // Find the document reference of the current user based on their userId
+//     QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where('id', isEqualTo: user.id)
+//         .limit(1)
+//         .get();
+
+//     if (querySnapshotCurrentUser.docs.isEmpty) {
+//       throw Exception('Current user document not found');
+//     }
+
+//     DocumentReference currentUserRef = querySnapshotCurrentUser.docs.first.reference;
+
+//     // Update the current user's following list
+//     await currentUserRef.update({
+//       'following': FieldValue.arrayUnion([userIdToFollow])
+//     });
+
+//     // Update the followed user's followers list
+//     await userToFollowRef.update({
+//       'followers': FieldValue.arrayUnion([user.id])
+//     });
+
+//     print('User followed successfully');
+//   } catch (e) {
+//     print("Error in addFollow: $e");
+//     throw Exception("Error following user: $e");
+//   }
+// }
+
+// Future<void> unfollow(String userIdToFollow) async {
+//   try {
+//     // Get the current logged-in user
+//     usermodel user = await getUser();
+
+//     // Find the document reference of the user to follow based on their userId
+//     QuerySnapshot querySnapshotToFollow = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where('id', isEqualTo: userIdToFollow)
+//         .limit(1)
+//         .get();
+
+//     if (querySnapshotToFollow.docs.isEmpty) {
+//       throw Exception('User to follow not found');
+//     }
+
+//     DocumentReference userToFollowRef = querySnapshotToFollow.docs.first.reference;
+
+//     // Find the document reference of the current user based on their userId
+//     QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where('id', isEqualTo: user.id)
+//         .limit(1)
+//         .get();
+
+//     if (querySnapshotCurrentUser.docs.isEmpty) {
+//       throw Exception('Current user document not found');
+//     }
+
+//     DocumentReference currentUserRef = querySnapshotCurrentUser.docs.first.reference;
+
+//     // Update the current user's following list
+//     await currentUserRef.update({
+//       'following': FieldValue.arrayRemove([userIdToFollow])
+//     });
+
+//     // Update the followed user's followers list
+//     await userToFollowRef.update({
+//       'followers': FieldValue.arrayRemove([user.id])
+//     });
+
+//     print('User followed successfully');
+//   } catch (e) {
+//     print("Error in addFollow: $e");
+//     throw Exception("Error following user: $e");
+//   }
+// }
+
+Future<bool> isFollowing(String userIdToCheck) async {
+    try {
+      usermodel user = await getUser();
+
+      QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
+          .collection('users')
+          .where('id', isEqualTo: user.id)
+          .limit(1)
+          .get();
+
+      if (querySnapshotCurrentUser.docs.isEmpty) {
+        throw Exception('Current user document not found');
+      }
+
+      DocumentSnapshot currentUserSnap = querySnapshotCurrentUser.docs.first;
+      Map<String, dynamic>? currentUserData = currentUserSnap.data() as Map<String, dynamic>?;
+      List<dynamic> following = currentUserData?['following'] ?? [];
+
+      return following.contains(userIdToCheck);
+    } catch (e) {
+      print("Error in isFollowing: $e");
+      throw Exception("Error checking follow status: $e");
     }
-
-    DocumentReference userToFollowRef = querySnapshotToFollow.docs.first.reference;
-
-    // Find the document reference of the current user based on their userId
-    QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: user.id)
-        .limit(1)
-        .get();
-
-    if (querySnapshotCurrentUser.docs.isEmpty) {
-      throw Exception('Current user document not found');
-    }
-
-    DocumentReference currentUserRef = querySnapshotCurrentUser.docs.first.reference;
-
-    // Update the current user's following list
-    await currentUserRef.update({
-      'following': FieldValue.arrayUnion([userIdToFollow])
-    });
-
-    // Update the followed user's followers list
-    await userToFollowRef.update({
-      'followers': FieldValue.arrayUnion([user.id])
-    });
-
-    print('User followed successfully');
-  } catch (e) {
-    print("Error in addFollow: $e");
-    throw Exception("Error following user: $e");
   }
-}
 
+  Future<void> toggleFollow(String userIdToFollow) async {
+    try {
+      usermodel user = await getUser();
 
+      QuerySnapshot querySnapshotToFollow = await FirebaseFirestore.instance
+          .collection('users')
+          .where('id', isEqualTo: userIdToFollow)
+          .limit(1)
+          .get();
 
+      if (querySnapshotToFollow.docs.isEmpty) {
+        throw Exception('User to follow not found');
+      }
+
+      DocumentReference userToFollowRef = querySnapshotToFollow.docs.first.reference;
+
+      QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
+          .collection('users')
+          .where('id', isEqualTo: user.id)
+          .limit(1)
+          .get();
+
+      if (querySnapshotCurrentUser.docs.isEmpty) {
+        throw Exception('Current user document not found');
+      }
+
+      DocumentReference currentUserRef = querySnapshotCurrentUser.docs.first.reference;
+
+      DocumentSnapshot currentUserSnapshot = await currentUserRef.get();
+      Map<String, dynamic>? currentUserData = currentUserSnapshot.data() as Map<String, dynamic>?;
+      List<dynamic> followingList = currentUserData?['following'] ?? [];
+
+      if (followingList.contains(userIdToFollow)) {
+        await currentUserRef.update({
+          'following': FieldValue.arrayRemove([userIdToFollow])
+        });
+
+        await userToFollowRef.update({
+          'followers': FieldValue.arrayRemove([user.id])
+        });
+
+        print('User unfollowed successfully');
+      } else {
+        await currentUserRef.update({
+          'following': FieldValue.arrayUnion([userIdToFollow])
+        });
+
+        await userToFollowRef.update({
+          'followers': FieldValue.arrayUnion([user.id])
+        });
+
+        print('User followed successfully');
+      }
+    } catch (e) {
+      print("Error in toggleFollow: $e");
+      throw Exception("Error toggling follow status: $e");
+    }
+  }
   }
 
     
