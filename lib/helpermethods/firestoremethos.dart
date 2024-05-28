@@ -30,7 +30,8 @@ class FirestoreMethods {
     try {
       usermodel user = await getUser();
       FirebaseFirestore.instance.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayUnion([user.id]) // Assuming 'uid' is the unique identifier
+        'likes': FieldValue.arrayUnion(
+            [user.id]) // Assuming 'uid' is the unique identifier
       });
     } catch (e) {
       print("Error in addlike: $e");
@@ -42,7 +43,8 @@ class FirestoreMethods {
     try {
       usermodel user = await getUser();
       FirebaseFirestore.instance.collection('posts').doc(postId).update({
-        'likes': FieldValue.arrayRemove([user.id]) // Assuming 'uid' is the unique identifier
+        'likes': FieldValue.arrayRemove(
+            [user.id]) // Assuming 'uid' is the unique identifier
       });
     } catch (e) {
       print("Error in removelike: $e");
@@ -53,7 +55,8 @@ class FirestoreMethods {
   Future<void> deletepost({required Map<String, dynamic> post}) async {
     try {
       usermodel user = await getUser();
-      if (user.id == post['uid']) { // Assuming 'uid' is the post owner's ID
+      if (user.id == post['uid']) {
+        // Assuming 'uid' is the post owner's ID
         await FirebaseFirestore.instance
             .collection('posts')
             .doc(post['postid'])
@@ -67,30 +70,86 @@ class FirestoreMethods {
       throw Exception("Error deleting post: $e");
     }
   }
-  
-      
-  Future<void> uploadComments({required Map<String, dynamic> post, required String description}) async {
+
+  Future<void> uploadComments(
+      {required Map<String, dynamic> post, required String description}) async {
+    try {
+      usermodel user = await getUser();
+      DocumentReference postRef =
+          FirebaseFirestore.instance.collection('comments').doc();
+
+      // Store comment data in Firestore
+      await postRef.set({
+        'commentId': postRef.id, // Add the commentId field
+        'postid': post['postid'], // Ensure this refers to the post's ID
+        'username': user.name,
+        'uid': user.id,
+        'userimage': user.img ?? '',
+        'description': description,
+        'likes': [],
+        'date': DateTime.now() // Optional: Add a timestamp field
+      });
+
+      print('Comment uploaded successfully');
+    } catch (e) {
+      print("Error in uploadComments: $e");
+      throw Exception("Error uploading comment: $e");
+    }
+  }
+Future<void> addFollow(String userIdToFollow) async {
   try {
+    // Get the current logged-in user
     usermodel user = await getUser();
-    DocumentReference postRef = FirebaseFirestore.instance.collection('comments').doc();
-    
-    // Store comment data in Firestore
-    await postRef.set({
-      'commentId': postRef.id,  // Add the commentId field
-      'postid': post['postid'], // Ensure this refers to the post's ID
-      'username': user.name,
-      'uid': user.id,
-      'userimage': user.img ?? '',
-      'description': description,
-      'likes': [],
-      'date': DateTime.now() // Optional: Add a timestamp field
+
+    // Find the document reference of the user to follow based on their userId
+    QuerySnapshot querySnapshotToFollow = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: userIdToFollow)
+        .limit(1)
+        .get();
+
+    if (querySnapshotToFollow.docs.isEmpty) {
+      throw Exception('User to follow not found');
+    }
+
+    DocumentReference userToFollowRef = querySnapshotToFollow.docs.first.reference;
+
+    // Find the document reference of the current user based on their userId
+    QuerySnapshot querySnapshotCurrentUser = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: user.id)
+        .limit(1)
+        .get();
+
+    if (querySnapshotCurrentUser.docs.isEmpty) {
+      throw Exception('Current user document not found');
+    }
+
+    DocumentReference currentUserRef = querySnapshotCurrentUser.docs.first.reference;
+
+    // Update the current user's following list
+    await currentUserRef.update({
+      'following': FieldValue.arrayUnion([userIdToFollow])
     });
 
-    print('Comment uploaded successfully');
+    // Update the followed user's followers list
+    await userToFollowRef.update({
+      'followers': FieldValue.arrayUnion([user.id])
+    });
+
+    print('User followed successfully');
   } catch (e) {
-    print("Error in uploadComments: $e");
-    throw Exception("Error uploading comment: $e");
+    print("Error in addFollow: $e");
+    throw Exception("Error following user: $e");
   }
 }
 
-}
+
+
+  }
+
+    
+    
+
+  
+
