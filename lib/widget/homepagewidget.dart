@@ -60,6 +60,10 @@ class _HomepagewidgetState extends State<Homepagewidget> {
     String postImage = widget.data['postimage'] ?? 'https://via.placeholder.com/600';
     String description = widget.data['description'] ?? '';
 
+    // Debug prints for data
+    print('User Image: $userImage');
+    print('Post Image: $postImage');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,10 +115,10 @@ class _HomepagewidgetState extends State<Homepagewidget> {
         TextButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return  CommentsPage(data: widget.data,);
+              return CommentsPage(data: widget.data);
             }));
           },
-          child: const Text('add comment'),
+          child: const Text('Add comment'),
         ),
         const Text(
           '1 hour ago',

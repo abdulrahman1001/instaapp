@@ -135,38 +135,41 @@ class _AddPostPageState extends State<AddPostPage> {
             )
           ],
         ),
-        body: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: pickedImgWeb != null
-                  ? Image.memory(pickedImgWeb!)
-                  : pickedImgMobile != null
-                      ? Image.file(pickedImgMobile!)
-                      : Center(child: Text('No image selected')),
-            ),
-            IconButton(
-                onPressed: () async {
-                  await photo.takeImage(context, onPressed: () {
-                    setState(() {
-                      pickedImgWeb = photo.pickedImgWeb;
-                      pickedImgMobile = photo.pickedImgMobile;
-                    });
-                    print('Image selected');
-                  });
-                },
-                icon: Icon(Icons.upload)),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Add content',
-                ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: pickedImgWeb != null
+                    ? Image.memory(pickedImgWeb!)
+                    : pickedImgMobile != null
+                        ? Image.file(pickedImgMobile!)
+                        : Center(child: Text('No image selected')),
               ),
-            )
-          ],
+              IconButton(
+                  onPressed: () async {
+                    await photo.takeImage(context, onPressed: () {
+                      
+                      setState(() {
+                        pickedImgWeb = photo.pickedImgWeb;
+                        pickedImgMobile = photo.pickedImgMobile;
+                      });
+                      print('Image selected');
+                    });
+                  },
+                  icon: Icon(Icons.upload)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Add content',
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

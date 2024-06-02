@@ -34,7 +34,10 @@ class homescreenlistview extends StatelessWidget {
               print('Post data: $data');
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Homepagewidget(data: data),
+                child: Homepagewidget(
+                  key: ValueKey(data['postid']), // Ensure unique key for each widget
+                  data: data,
+                ),
               );
             },
           );
