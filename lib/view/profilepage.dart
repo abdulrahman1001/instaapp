@@ -19,7 +19,7 @@ class profilepage extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Text('edit profile'),
           ),
-        PostGridView (),
+        Expanded(child: PostGridView ()),
       
         ],
       ),

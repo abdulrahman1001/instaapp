@@ -33,22 +33,20 @@ class PostGridView extends StatelessWidget {
                 return Center(child: Text('No posts found'));
               } else {
                 final posts = postSnapshot.data!.docs;
-                return Expanded(
-                  child: GridView.builder(
-                    scrollDirection: Axis.vertical,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisSpacing: 2,
-                      mainAxisSpacing: 5,
-                      crossAxisCount: 4,
-                    ),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        color: Colors.amber,
-                      );
-                    },
-                    itemCount: posts.length,
-                    // shrinkWrap: true,
+                return GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 5,
+                    crossAxisCount: 4,
                   ),
+                  itemBuilder: (context, index) {
+                    final post = posts[index].data() as Map<String, dynamic>;
+                    return Container(
+                      child: Image.network(post['postimage']),
+                    );
+                  },
+                  itemCount: posts.length,
                 );
               }
             },

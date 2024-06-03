@@ -44,9 +44,10 @@ class OtherPostGridView extends StatelessWidget {
                     // You can use the data from 'posts' to display actual content
                     final post = posts[index];
                     return Container(
-                      color: Colors.amber,
+                     
                       child: Center(
-                        child: Text(post['title']), // Assuming 'title' is a field in your posts collection
+                        child: Image.network
+                        (post['postimage']), // Assuming 'title' is a field in your posts collection
                       ),
                     );
                   },

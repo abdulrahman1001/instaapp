@@ -11,7 +11,7 @@ class CommentListTile extends StatelessWidget {
       subtitle: Text(data['description']),
       trailing: Icon(Icons.favorite),
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(myimg),
+        backgroundImage: NetworkImage(data['userimage']??myimg),
       ),
     );
   }

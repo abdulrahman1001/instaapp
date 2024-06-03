@@ -39,7 +39,7 @@ class Rowotherprofilepage extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 25,
-                          backgroundImage: NetworkImage(myimg),
+                          backgroundImage: NetworkImage(mydata['img']),
                         ),
                         Text(mydata['name']),
                       ],

@@ -38,7 +38,7 @@ class _AddPostPageState extends State<AddPostPage> {
         final ref = FirebaseStorage.instance
             .ref()
             .child('postImages')
-            .child('$userId-web.jpg');
+            .child('${DateTime.now()}-web.jpg');
         await ref.putData(pickedImgWeb!);
         imageUrl = await ref.getDownloadURL();
         print('Image uploaded for web: $imageUrl');
@@ -46,7 +46,7 @@ class _AddPostPageState extends State<AddPostPage> {
         final ref = FirebaseStorage.instance
             .ref()
             .child('postImages')
-            .child('$userId-mobile.jpg');
+            .child('${DateTime.now()}-mobile.jpg');
         await ref.putFile(pickedImgMobile!);
         imageUrl = await ref.getDownloadURL();
         print('Image uploaded for mobile: $imageUrl');

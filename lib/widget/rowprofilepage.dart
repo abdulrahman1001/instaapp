@@ -55,7 +55,7 @@ class _RowProfilePageState extends State<RowProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 25,
-                          backgroundImage: NetworkImage(myimg),
+                          backgroundImage: NetworkImage(user.img),
                         ),
                         Text(user.name),
                       ],

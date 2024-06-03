@@ -24,7 +24,7 @@ class SearchQuery extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: NetworkImage( myimg),  // Ensure mydata contains profile_image or fallback to myimg
+              image: NetworkImage( mydata['img']),  // Ensure mydata contains profile_image or fallback to myimg
               fit: BoxFit.fill,
             ),
           ),
