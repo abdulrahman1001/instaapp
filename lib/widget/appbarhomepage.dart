@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:instaapp/helpermethods/firestoremethos.dart';
+import 'package:instaapp/models/usermodel.dart';
+import 'package:instaapp/view/chatpage.dart';
 import 'package:instaapp/view/loginpage.dart';
 
 class appbarhomepage extends StatelessWidget {
@@ -24,6 +27,19 @@ class appbarhomepage extends StatelessWidget {
               },
               icon: Icon(
                 Icons.logout,
+                size: 30,
+              )),
+                  IconButton(
+              onPressed: () async {
+                usermodel user= await FirestoreMethods().getUser();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+
+                  return ChatPage(name: user.name,);
+                }));
+              },
+              icon: Icon(
+                Icons.comment,
                 size: 30,
               )),
         ],
