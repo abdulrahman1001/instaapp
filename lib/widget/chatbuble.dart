@@ -5,6 +5,28 @@ class chatbuble extends StatelessWidget {
   final QueryDocumentSnapshot mydata;
   @override
   Widget build(BuildContext context) {
-    return Scaffold() ;
+    return Scaffold(
+      body:SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(onPressed: (){
+                    Navigator.pop(context);
+                  }, icon: Icon(Icons.arrow_back)),
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(mydata['img']),
+                  ),
+                  Text(mydata['name'])
+                ],
+              ),
+            ),
+          ],
+        ),
+      ) ,
+    ) ;
   }
 }
